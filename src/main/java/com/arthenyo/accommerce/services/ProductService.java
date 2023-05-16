@@ -3,11 +3,16 @@ package com.arthenyo.accommerce.services;
 import com.arthenyo.accommerce.DTO.ProductDTO;
 import com.arthenyo.accommerce.entities.Product;
 import com.arthenyo.accommerce.repositories.ProductRepository;
+import com.arthenyo.accommerce.services.excptions.DataBaseExcption;
 import com.arthenyo.accommerce.services.excptions.ResouceNotFoundExcption;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -43,15 +48,27 @@ public class ProductService {
 
     @Transactional
     public ProductDTO update(Long id, ProductDTO dto){
-        Product entity = productRepository.getReferenceById(id);
-        copyDtoToEntity(dto, entity);
-        entity = productRepository.save(entity);
-        return new ProductDTO(entity);
+        try {
+            Product entity = productRepository.getReferenceById(id);
+            copyDtoToEntity(dto, entity);
+            entity = productRepository.save(entity);
+            return new ProductDTO(entity);
+        }catch (EntityNotFoundException e){
+            throw new ResouceNotFoundExcption("Recurso não encontrado");
+        }
+
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.SUPPORTS)
     public void delete(Long id){
-        productRepository.deleteById(id);
+        try {
+            productRepository.deleteById(id);
+        }catch (EmptyResultDataAccessException e){
+            throw new ResouceNotFoundExcption("Recurso não encontrado");
+        }catch (DataIntegrityViolationException e){
+            throw new DataBaseExcption("Falha de integridade referencial");
+        }
+
     }
 
     private void copyDtoToEntity(ProductDTO dto, Product entity) {
