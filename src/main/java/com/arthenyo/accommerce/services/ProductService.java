@@ -3,6 +3,7 @@ package com.arthenyo.accommerce.services;
 import com.arthenyo.accommerce.DTO.ProductDTO;
 import com.arthenyo.accommerce.entities.Product;
 import com.arthenyo.accommerce.repositories.ProductRepository;
+import com.arthenyo.accommerce.services.excptions.ResouceNotFoundExcption;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,7 +22,8 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public ProductDTO findById(Long id){
-        Product product = productRepository.findById(id).get();
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ResouceNotFoundExcption("Recurso não encontrado"));
         return new ProductDTO(product);
     }
 
