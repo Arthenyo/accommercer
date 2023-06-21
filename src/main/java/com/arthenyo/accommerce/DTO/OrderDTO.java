@@ -3,6 +3,7 @@ package com.arthenyo.accommerce.DTO;
 import com.arthenyo.accommerce.entities.Order;
 import com.arthenyo.accommerce.entities.OrderItem;
 import com.arthenyo.accommerce.enuns.OrderStatus;
+import jakarta.validation.constraints.NotEmpty;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ public class OrderDTO {
     private OrderStatus status;
     private ClientDTO client;
     private PaymentDTO payment;
+    @NotEmpty(message = "deve ter pelo menos um item")
     private List<OrderItemDTO>itens = new ArrayList<>();
 
     public OrderDTO(Long id, Instant moment, OrderStatus status, ClientDTO client, PaymentDTO payment) {
