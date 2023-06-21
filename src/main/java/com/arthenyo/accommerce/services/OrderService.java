@@ -1,16 +1,16 @@
 package com.arthenyo.accommerce.services;
 
-import com.arthenyo.accommerce.DTO.CategoryDTO;
-import com.arthenyo.accommerce.DTO.OrderDTO;
-import com.arthenyo.accommerce.DTO.OrderItemDTO;
-import com.arthenyo.accommerce.DTO.ProductDTO;
+import com.arthenyo.accommerce.DTO.*;
 import com.arthenyo.accommerce.entities.*;
 import com.arthenyo.accommerce.enuns.OrderStatus;
 import com.arthenyo.accommerce.repositories.OrderItemRepository;
 import com.arthenyo.accommerce.repositories.OrderRepository;
 import com.arthenyo.accommerce.repositories.ProductRepository;
+import com.arthenyo.accommerce.services.excptions.ForbiddenExcption;
 import com.arthenyo.accommerce.services.excptions.ResouceNotFoundExcption;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,11 +27,14 @@ public class OrderService {
     private ProductRepository productRepository;
     @Autowired
     private OrderItemRepository orderItemRepository;
+    @Autowired
+    private AuthService authService;
 
     @Transactional(readOnly = true)
     public OrderDTO findById(Long id){
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new ResouceNotFoundExcption("Recurso não encontrado"));
+        authService.validateSelfOrAdmin(order.getClient().getId());
         return new OrderDTO(order);
     }
 

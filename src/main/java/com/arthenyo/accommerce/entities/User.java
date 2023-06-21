@@ -76,7 +76,14 @@ public class User implements UserDetails {
     public LocalDate getBirthDate() {
         return birthDate;
     }
-
+    public boolean meRole(String roleName){
+        for (Role role : roles){
+            if(role.getAuthority().equals(roleName)){
+                return true;
+            }
+        }
+        return false;
+    }
     public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
     }
