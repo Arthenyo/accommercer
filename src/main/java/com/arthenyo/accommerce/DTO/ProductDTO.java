@@ -2,10 +2,7 @@ package com.arthenyo.accommerce.DTO;
 
 import com.arthenyo.accommerce.entities.Category;
 import com.arthenyo.accommerce.entities.Product;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +17,7 @@ public class ProductDTO {
     @NotBlank(message = "Campo requerido")
     private String description;
     @Positive(message = "O preço deve ser positivo")
+    @NotNull(message = "campo requerido")
     private Double price;
     private String imgUrl;
     @NotEmpty(message = "deve ter pelo menos uma categoria")
