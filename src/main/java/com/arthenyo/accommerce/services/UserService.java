@@ -1,6 +1,8 @@
 package com.arthenyo.accommerce.services;
 
-import com.arthenyo.accommerce.DTO.UserDTO;
+import com.arthenyo.accommerce.DTO.*;
+import com.arthenyo.accommerce.entities.Category;
+import com.arthenyo.accommerce.entities.Product;
 import com.arthenyo.accommerce.entities.Role;
 import com.arthenyo.accommerce.entities.User;
 import com.arthenyo.accommerce.projections.UserDetailsProjection;
@@ -22,6 +24,14 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Transactional
+    public UserDTO insert(UserDTO dto){
+        User entity =new User();
+        copyDtoToEntity(dto, entity);
+        entity = userRepository.save(entity);
+        return new UserDTO(entity);
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -51,8 +61,21 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional(readOnly = true)
-    public UserDTO getMe(){
+    public UserMinDTO getMe(){
         User user = authenticated();
-        return new UserDTO(user);
+        return new UserMinDTO(user);
+    }
+
+    private void copyDtoToEntity(UserDTO dto, User entity) {
+        entity.setName(dto.getName());
+        entity.setEmail(dto.getEmail());
+        entity.setBirthDate(dto.getBirthDate());
+        entity.setPassword(dto.getPassword());
+        entity.setPhone(dto.getPhone());
+        for (RoleDTO roleDTO: dto.getRoles()){
+            Role role = new Role();
+            role.setId(roleDTO.getId());
+            entity.getRoles().add(role);
+        }
     }
 }

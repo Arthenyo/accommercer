@@ -1,7 +1,9 @@
 package com.arthenyo.accommerce.services;
 
+import com.arthenyo.accommerce.DTO.CategoryDTO;
 import com.arthenyo.accommerce.DTO.ProductDTO;
 import com.arthenyo.accommerce.DTO.ProductMinDTO;
+import com.arthenyo.accommerce.entities.Category;
 import com.arthenyo.accommerce.entities.Product;
 import com.arthenyo.accommerce.repositories.ProductRepository;
 import com.arthenyo.accommerce.services.excptions.DataBaseExcption;
@@ -74,5 +76,11 @@ public class ProductService {
         entity.setDescription(dto.getDescription());
         entity.setPrice(dto.getPrice());
         entity.setImgUrl(dto.getImgUrl());
+        entity.getCategories().clear();
+        for (CategoryDTO catDTO: dto.getCategories()){
+            Category cat = new Category();
+            cat.setId(catDTO.getId());
+            entity.getCategories().add(cat);
+        }
     }
 }
