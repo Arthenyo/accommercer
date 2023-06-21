@@ -1,6 +1,7 @@
 package com.arthenyo.accommerce.controllers;
 
 import com.arthenyo.accommerce.DTO.ProductDTO;
+import com.arthenyo.accommerce.DTO.ProductMinDTO;
 import com.arthenyo.accommerce.services.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +31,10 @@ public class ProductController {
     }
 
     @GetMapping()
-    public ResponseEntity<Page<ProductDTO>> findAll(@RequestParam(
+    public ResponseEntity<Page<ProductMinDTO>> findAll(@RequestParam(
             name = "name",defaultValue = "") String name
-            ,Pageable pageable){
-        Page<ProductDTO> dto = productService.findAll(name,pageable);
+            , Pageable pageable){
+        Page<ProductMinDTO> dto = productService.findAll(name,pageable);
         return ResponseEntity.ok(dto);
     }
     @PreAuthorize("hasRole('ROLE_ADMIN')")

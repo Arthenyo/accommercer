@@ -1,6 +1,7 @@
 package com.arthenyo.accommerce.services;
 
 import com.arthenyo.accommerce.DTO.ProductDTO;
+import com.arthenyo.accommerce.DTO.ProductMinDTO;
 import com.arthenyo.accommerce.entities.Product;
 import com.arthenyo.accommerce.repositories.ProductRepository;
 import com.arthenyo.accommerce.services.excptions.DataBaseExcption;
@@ -29,9 +30,9 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ProductDTO> findAll(String name,Pageable pageable){
+    public Page<ProductMinDTO> findAll(String name, Pageable pageable){
         Page<Product> product = productRepository.searchByName(name,pageable);
-        return product.map(x -> new ProductDTO(x));
+        return product.map(x -> new ProductMinDTO(x));
     }
 
     @Transactional
