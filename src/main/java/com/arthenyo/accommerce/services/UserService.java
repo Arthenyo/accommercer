@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +25,8 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Transactional
     public UserDTO insert(UserDTO dto){
@@ -70,7 +73,7 @@ public class UserService implements UserDetailsService {
         entity.setName(dto.getName());
         entity.setEmail(dto.getEmail());
         entity.setBirthDate(dto.getBirthDate());
-        entity.setPassword(dto.getPassword());
+        entity.setPassword(passwordEncoder.encode(dto.getPassword()));
         entity.setPhone(dto.getPhone());
         for (RoleDTO roleDTO: dto.getRoles()){
             Role role = new Role();
